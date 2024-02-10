@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }}{% endblock %}
+{% block menu %}
+    <a class="nav-link" aria-current="page" href="{% url 'webapp:index' %}">На главную</a>
+    {% if perms.webapp.change_project or project.author == request.user %}
+        <a class="nav-link" aria-current="page" href="{% url 'webapp:project_update_view' project.pk %}">Редактировать</a>
+    {% endif %}
+    {% if perms.webapp.delete_project or project.author == request.user %}
+        <a class="nav-link" aria-current="page" href="{% url 'webapp:project_delete_view' project.pk %}">Удалить</a>
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+        <a class="nav-link" aria-current="page" href="{% url 'webapp:review_add' project.pk %}">Добавить
+            комментарий</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Project</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ project.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.author }}</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.description }}</h6>
+            <p class="card-text">{{ project.content }}</p>
+            <p class="card-text">Category: {% for tag in project.categories.all %}
+                {{ category.name }}{% if forloop.last %}.{% else %}, {% endif %}
+            {% endfor %}
+            </p>
+            <p>{{ project.created }}</p>
+        </div>
+    </div>
+     <h3 class="mt-2">Reviews: </h3>
+    <div class="row row-cols-3 mt-2">
+        {% for review in reviews %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Автор: {{ review.author }}</h5>
+                        <p class="card-text">{{ review.text }}</p>
+                        <p>{{ project.created }}</p>
+
+{#                        {% if perms.webapp.change_comment or comment.author == request.user %}#}
+                            <a href="{% url 'webapp:review_update_view' review.pk %}"
+                               class="card-link">Редактировать</a>
+{#                        {% endif %}#}
+{#                        {% if perms.webapp.delete_comment or comment.author == request.user %}#}
+                            <a href="{% url 'webapp:review_delete_view' review.pk %}" class="card-link">Удалить</a>
+{#                        {% endif %}#}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

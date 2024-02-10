@@ -1,0 +1,41 @@
+    {% load static %}
+    {% if is_paginated %}
+    	{% include 'partial/pagination.html' %}
+    {% endif %}
+
+    <div class="row row-cols-3">
+
+        {% for project in projects %}
+            <div class="col">
+                <div class="card my-3">
+{#                    {% if project.picture %}#}
+{#                        <img src="{{ project.picture.url }}" class="card-img-top" alt="">#}
+{#                    {% else %}#}
+{#                        <img src="{% static 'img/web-20180403124515438253.png' %}" class="card-img-top">#}
+{#                    {% endif %}#}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.author }}</h6>
+                        <p class="card-text">{{ project.content }}</p>
+                        <p class="card-text">Category: {% for category in project.categories.all %}
+                            {{ category.name }}{% if forloop.last %}.{% else %}, {% endif %}
+                        {% endfor %}
+                        </p>
+                        <a href="{% url 'webapp:project_view' project.pk %}" class="btn btn-primary">Подробнее...</a>
+                        <a href="{% url 'webapp:project_update_view' project.pk %}" class="btn btn-success">Изменить</a>
+                        <a href="{% url 'webapp:project_delete_view' project.pk %}" class="btn btn-danger">Удалить</a>
+{#                    {% if perms.webapp.change_project or project.author == request.user %}#}
+{#                        <a href="{% url 'webapp:project_update_view' pk=project.pk %}" class="card-link">Редактировать</a>#}
+{#                    {% endif %}#}
+
+{#                    {% if perms.webapp.delete_project or project.author == request.user %}#}
+{#                        <a href="{% url 'webapp:project_delete_view' pk=project.pk %}" class="card-link">Удалить</a>#}
+{#                    {% endif %}#}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Нет статей</p>
+
+        {% endfor %}
+    </div>
