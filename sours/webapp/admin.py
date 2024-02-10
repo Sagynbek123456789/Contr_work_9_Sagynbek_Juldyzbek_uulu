@@ -1,3 +1,6 @@
 from django.contrib import admin
+from webapp.models import Project, Review, Category
 
-# Register your models here.
+admin.site.register(Project)
+admin.site.register(Review)
+admin.site.register(Category)
